@@ -34,6 +34,20 @@ aux_source_directory(xdl xdl-src)
 add_library(${MODULE_NAME} SHARED main.cpp hack.cpp il2cpp_dump.cpp ${xdl-src})
 target_link_libraries(${MODULE_NAME} log)
 
+
+file(GLOB OPENAL_SOURCES_C "src/main/cpp/libraries/$(TARGET_ARCH_ABI)/libdobby.a")
+
+add_library( libdobby             
+             SHARED            
+             ${OPENAL_SOURCES_C})
+
+find_library( log-lib log )
+
+target_link_libraries( libdobby ${log-lib})
+
+
+
+
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_custom_command(TARGET ${MODULE_NAME} POST_BUILD
             COMMAND ${CMAKE_STRIP} --strip-all --remove-section=.comment "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${MODULE_NAME}.so")
